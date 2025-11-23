@@ -7,6 +7,7 @@ import { Menu, X, Sprout, LogOut, User as UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { NotificationsWrapper } from "./NotificationsWrapper";
 
 const navLinks = [
     { name: "Home", href: "/" },
@@ -99,54 +100,60 @@ export function Navbar({ user }: NavbarProps) {
                                 })}
                             </div>
 
-                            {/* Right Side - Profile/Login */}
+                            {/* Right Side - Notifications & Profile/Login */}
                             <div className="flex items-center gap-3">
                                 {user ? (
-                                    <div className="relative">
-                                        <motion.button
-                                            onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                            className="flex items-center gap-2 group"
-                                            whileHover={{ scale: 1.05 }}
-                                            whileTap={{ scale: 0.95 }}
-                                        >
-                                            <div className="w-9 h-9 rounded-full bg-[#bef264]/10 border border-border flex items-center justify-center group-hover:border-[#bef264]/60 transition-colors">
-                                                <div className="text-white">
-                                                    <UserIcon size={18} className="group-hover:text-[#bef264] transition-colors" />
-                                                </div>
-                                            </div>
-                                            <motion.span
-                                                style={{ fontWeight: navFontWeight }}
-                                                className="text-xs bg-[#bef264]/10 px-2.5 py-1 rounded-full border border-border text-white"
+                                    <>
+                                        {/* Notifications */}
+                                        <NotificationsWrapper />
+
+                                        {/* Profile Dropdown */}
+                                        <div className="relative">
+                                            <motion.button
+                                                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                                className="flex items-center gap-2 group"
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
                                             >
-                                                XP: 0
-                                            </motion.span>
-                                        </motion.button>
-                                        <AnimatePresence>
-                                            {isProfileOpen && (
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                                    transition={{ duration: 0.2 }}
-                                                    className="absolute right-0 mt-3 w-56 bg-white border border-border rounded-2xl shadow-2xl overflow-hidden"
+                                                <div className="w-9 h-9 rounded-full bg-[#bef264]/10 border border-border flex items-center justify-center group-hover:border-[#bef264]/60 transition-colors">
+                                                    <div className="text-white">
+                                                        <UserIcon size={18} className="group-hover:text-[#bef264] transition-colors" />
+                                                    </div>
+                                                </div>
+                                                <motion.span
+                                                    style={{ fontWeight: navFontWeight }}
+                                                    className="text-xs bg-[#bef264]/10 px-2.5 py-1 rounded-full border border-border text-white"
                                                 >
-                                                    <div className="px-4 py-3 border-b border-border">
-                                                        <p className="text-sm text-bauyesDark font-medium truncate">{user.email}</p>
-                                                    </div>
-                                                    <div className="p-2">
-                                                        <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 text-sm text-bauyesDark hover:text-bauyesLime hover:bg-bauyesLime/10 rounded-lg transition-colors" onClick={() => setIsProfileOpen(false)}>
-                                                            <UserIcon size={16} className="text-bauyesDark" />
-                                                            Dashboard
-                                                        </Link>
-                                                        <button onClick={() => { handleSignOut(); setIsProfileOpen(false); }} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
-                                                            <LogOut size={16} />
-                                                            Sign Out
-                                                        </button>
-                                                    </div>
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-                                    </div>
+                                                    XP: 0
+                                                </motion.span>
+                                            </motion.button>
+                                            <AnimatePresence>
+                                                {isProfileOpen && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                                                        transition={{ duration: 0.2 }}
+                                                        className="absolute right-0 mt-3 w-56 bg-white border border-border rounded-2xl shadow-2xl overflow-hidden"
+                                                    >
+                                                        <div className="px-4 py-3 border-b border-border">
+                                                            <p className="text-sm text-bauyesDark font-medium truncate">{user.email}</p>
+                                                        </div>
+                                                        <div className="p-2">
+                                                            <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 text-sm text-bauyesDark hover:text-bauyesLime hover:bg-bauyesLime/10 rounded-lg transition-colors" onClick={() => setIsProfileOpen(false)}>
+                                                                <UserIcon size={16} className="text-bauyesDark" />
+                                                                Dashboard
+                                                            </Link>
+                                                            <button onClick={() => { handleSignOut(); setIsProfileOpen(false); }} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                                                                <LogOut size={16} />
+                                                                Sign Out
+                                                            </button>
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+                                    </>
                                 ) : (
                                     <Link href="/login">
                                         <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-6 py-2.5 bg-bauyesLime text-bauyesDark font-bold rounded-full text-sm shadow-[0_0_20px_rgba(190,242,100,0.5)] hover:shadow-[0_0_40px_rgba(190,242,100,0.8)] transition-all">
