@@ -1,43 +1,43 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/utils/supabase/server";
 import { MembersGrid } from "@/components/members/MembersGrid";
-import { TeamMember } from "@/types";
-
-export const revalidate = 3600; // Revalidate every hour
 
 export default async function MembersPage() {
     const supabase = await createClient();
 
-    const { data: members, error } = await supabase
-        .from("team_members")
-        .select("*")
-        .eq("status", "active")
-        .order("priority", { ascending: true });
+    // Fetch all user profiles
+    const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, username, avatar_url, bio, total_xp, current_level")
+        .order("total_xp", { ascending: false });
 
-    if (error) {
-        console.error("Error fetching members:", error);
-        return <div>Error loading members</div>;
-    }
+    const members = (profiles || []).map(profile => ({
+        id: profile.id,
+        full_name: profile.full_name || profile.username || "Anonymous",
+        role_title: `Level ${profile.current_level}`,
+        bio_short: `${profile.total_xp} XP`,
+        bio_long: profile.bio || "No bio available",
+        profile_image: profile.avatar_url || null,
+        social_links: {},
+        achievements: [],
+        status: "active" as const,
+        priority: 99,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+    }));
 
     return (
-        <div className="min-h-screen bg-void-black pt-24 pb-20 px-4 md:px-8 relative overflow-hidden">
-            {/* Background Effects */}
-            <div className="absolute top-0 left-0 w-full h-full bg-[url('/grid.svg')] opacity-10 pointer-events-none" />
-            <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-
-            <div className="max-w-7xl mx-auto relative z-10">
-                {/* Header */}
-                <div className="text-center mb-16">
-                    <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-4 tracking-tight">
-                        THE <span className="text-primary">SQUAD</span>
+        <div className="min-h-screen bg-voidBlack">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+                        Our Squad
                     </h1>
-                    <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                        Meet the architects, builders, and visionaries behind BAUYES.
-                        A collective of cyber-agrarian pioneers.
+                    <p className="text-xl text-zinc-400">
+                        Meet the amazing members of BAUYES
                     </p>
                 </div>
 
-                {/* Grid */}
-                <MembersGrid members={members as TeamMember[]} />
+                <MembersGrid members={members} />
             </div>
         </div>
     );
