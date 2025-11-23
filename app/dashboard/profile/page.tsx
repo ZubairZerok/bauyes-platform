@@ -37,11 +37,25 @@ export default async function ProfilePage() {
         .select("*")
         .eq("user_id", user.id);
 
-    // Fetch events attended count
+    // Fetch events attended count and details
     const { data: registrations } = await supabase
         .from("registrations")
-        .select("id")
-        .eq("user_id", user.id);
+        .select(`
+            id,
+            event_id,
+            status,
+            created_at,
+            event:events(
+                id,
+                title,
+                date,
+                location,
+                category,
+                xp_reward
+            )
+        `)
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
 
     const eventsAttended = registrations?.length || 0;
 
@@ -91,6 +105,38 @@ export default async function ProfilePage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Registered Events */}
+                {registrations && registrations.length > 0 && (
+                    <div className="px-8">
+                        <h3 className="text-2xl font-display font-bold text-white mb-6">Registered Events</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {registrations.map((reg: any) => (
+                                <div key={reg.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-lime-500/50 transition-all">
+                                    <div className="flex items-start justify-between mb-3">
+                                        <div className="flex-1">
+                                            <h4 className="text-lg font-bold text-white mb-1">{reg.event.title}</h4>
+                                            <p className="text-sm text-zinc-500">{reg.event.category}</p>
+                                        </div>
+                                        <div className="px-2 py-1 bg-lime-500/10 text-lime-400 text-xs rounded border border-lime-500/20">
+                                            {reg.event.xp_reward} XP
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2 text-sm text-zinc-400">
+                                        <div className="flex items-center gap-2">
+                                            <Calendar className="w-4 h-4" />
+                                            {new Date(reg.event.date).toLocaleDateString()}
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Trophy className="w-4 h-4" />
+                                            {reg.event.location}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Badge Grid - Trophy Case */}
                 <div className="px-8 pb-8">

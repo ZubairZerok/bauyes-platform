@@ -12,6 +12,7 @@ import Link from 'next/link';
 export default async function EventRegistrationPage({ params }: { params: { id: string } }) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
+    const { id } = await params;
 
     if (!user) {
         redirect('/login');
@@ -20,7 +21,7 @@ export default async function EventRegistrationPage({ params }: { params: { id: 
     const { data: event, error } = await supabase
         .from('events')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', id)
         .single();
 
     if (error || !event) {
@@ -31,12 +32,12 @@ export default async function EventRegistrationPage({ params }: { params: { id: 
     const { data: existingRegistration } = await supabase
         .from('registrations')
         .select('id')
-        .eq('event_id', params.id)
+        .eq('event_id', id)
         .eq('user_id', user.id)
         .single();
 
     if (existingRegistration) {
-        redirect(`/dashboard/events/${params.id}`);
+        redirect(`/dashboard/events/${id}`);
     }
 
     const { data: profile } = await supabase
@@ -47,7 +48,7 @@ export default async function EventRegistrationPage({ params }: { params: { id: 
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-2xl">
-            <Link href={`/dashboard/events/${params.id}`} className="flex items-center text-zinc-400 hover:text-white mb-6 transition-colors">
+            <Link href={`/dashboard/events/${id}`} className="flex items-center text-zinc-400 hover:text-white mb-6 transition-colors">
                 <ArrowLeft className="w-4 h-4 mr-2" /> Back to Event
             </Link>
 

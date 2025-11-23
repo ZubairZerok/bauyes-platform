@@ -1,234 +1,210 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { DashboardShell } from "@/components/layout/DashboardShell";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { Profile } from "@/types";
-import { Crown, Trophy, User as UserIcon } from "lucide-react";
-import Image from "next/image";
+import { MonthPicker } from "@/components/leaderboard/MonthPicker";
+import { Trophy, Medal, Crown, Flame } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
-export default async function LeaderboardPage() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+interface LeaderboardEntry {
+    id: string;
+    full_name: string;
+    username: string;
+    avatar_url: string | null;
+    total_xp: number;
+    current_level: number;
+    rank: number;
+}
 
-    if (!user) {
-        redirect("/login");
+export default function LeaderboardPage() {
+    const [selectedMonth, setSelectedMonth] = useState(new Date());
+    const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchLeaderboard();
+    }, [selectedMonth]);
+
+    async function fetchLeaderboard() {
+        setLoading(true);
+        const supabase = createClient();
+
+        // For now, we'll show all-time leaderboard
+        // In future, you can filter by month using XP transaction timestamps
+        const { data, error } = await supabase
+            .from("profiles")
+            .select("id, full_name, username, avatar_url, total_xp, current_level")
+            .order("total_xp", { ascending: false })
+            .limit(50);
+
+        if (data && !error) {
+            const rankedData = data.map((entry, index) => ({
+                ...entry,
+                rank: index + 1,
+            }));
+            setLeaderboard(rankedData);
+        }
+        setLoading(false);
     }
 
-    // Fetch top 50 profiles ordered by XP
-    const { data: profiles } = await supabase
-        .from("profiles")
-        .select("*")
-        .order("total_xp", { ascending: false })
-        .limit(50);
-
-    const leaderboard = (profiles || []) as Profile[];
-
-    // Get current user's profile for highlighting
-
-
-    // Split into podium (top 3) and list (rest)
-    const podium = leaderboard.slice(0, 3);
-    const list = leaderboard.slice(3);
+    const getMedalForRank = (rank: number) => {
+        if (rank === 1) return <Crown className="w-6 h-6 text-yellow-400" />;
+        if (rank === 2) return <Medal className="w-6 h-6 text-zinc-300" />;
+        if (rank === 3) return <Medal className="w-6 h-6 text-orange-600" />;
+        return null;
+    };
 
     return (
         <DashboardShell>
-            <div className="p-8 max-w-7xl mx-auto space-y-8">
+            <div className="p-8 max-w-6xl mx-auto space-y-8">
                 {/* Header */}
-                <div className="text-center">
-                    <h2 className="text-3xl md:text-4xl font-display font-bold text-bauyesLime mb-2">
-                        Leaderboard
-                    </h2>
-                    <p className="text-bauyesDark">Top Hustlers at BAU</p>
+                <div className="text-center space-y-3">
+                    <div className="flex justify-center mb-4">
+                        <Trophy className="w-16 h-16 text-lime-400" />
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-display font-bold text-white">
+                        Top Performers
+                    </h1>
+                    <p className="text-zinc-400 text-lg">
+                        Compete with the best and climb to the top!
+                    </p>
                 </div>
 
-                {leaderboard.length === 0 ? (
-                    /* Empty State */
-                    <div className="text-center py-20 bg-card border border-border rounded-2xl">
-                        <Trophy className="mx-auto w-16 h-16 text-bauyesDark mb-4" />
-                        <h3 className="text-xl font-bold text-bauyesDark mb-2">Be the First Legend</h3>
-                        <p className="text-muted-foreground">Start earning XP to claim your spot on the leaderboard!</p>
-                    </div>
-                ) : (
-                    <>
-                        {/* Podium - Top 3 */}
-                        {podium.length > 0 && (
-                            <div className="flex items-end justify-center gap-4 md:gap-8 mb-12">
-                                {/* #2 - Silver (Left) */}
-                                {podium[1] && (
-                                    <div className="flex flex-col items-center w-32 md:w-40">
-                                        <div className="relative mb-3">
-                                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-bauyesDark/10 flex items-center justify-center border-2 border-border overflow-hidden">
-                                                {podium[1].avatar_url ? (
-                                                    <Image src={podium[1].avatar_url} alt={podium[1].full_name || "User"} width={96} height={96} className="w-full h-full object-cover" />
-                                                ) : (
-                                                    <UserIcon size={32} className="text-bauyesDark" />
-                                                )}
-                                            </div>
-                                            <div className="absolute -top-2 -right-2 w-8 h-8 bg-bauyesDark/60 rounded-full flex items-center justify-center text-voidBlack font-bold text-sm shadow-lg">
-                                                2
-                                            </div>
-                                        </div>
-                                        <div className="bg-card border-2 border-border rounded-xl p-4 w-full text-center h-32 flex flex-col justify-center">
-                                            <p className="text-sm font-bold text-bauyesDark truncate mb-1">
-                                                {podium[1].full_name || podium[1].username || "User"}
-                                            </p>
-                                            <p className="text-bauyesLime font-bold text-lg">
-                                                {podium[1].total_xp.toLocaleString()} XP
-                                            </p>
-                                            <p className="text-xs text-muted-foreground mt-1">Level {podium[1].current_level}</p>
-                                        </div>
-                                    </div>
-                                )}
+                {/* Month Picker */}
+                <div className="max-w-md mx-auto">
+                    <MonthPicker selectedMonth={selectedMonth} onMonthChange={setSelectedMonth} />
+                </div>
 
-                                {/* #1 - Gold (Center, Bigger) */}
-                                {podium[0] && (
-                                    <div className="flex flex-col items-center w-36 md:w-48">
-                                        <Crown className="w-8 h-8 md:w-10 md:h-10 text-bauyesLime mb-2 animate-pulse" />
-                                        <div className="relative mb-3">
-                                            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-bauyesLime/20 flex items-center justify-center border-4 border-bauyesLime shadow-[0_0_30px_rgba(74,222,128,0.4)] overflow-hidden">
-                                                {podium[0].avatar_url ? (
-                                                    <Image src={podium[0].avatar_url} alt={podium[0].full_name || "User"} width={128} height={128} className="w-full h-full object-cover" />
-                                                ) : (
-                                                    <UserIcon size={40} className="text-bauyesLime" />
-                                                )}
-                                            </div>
-                                            <div className="absolute -top-2 -right-2 w-10 h-10 bg-bauyesLime rounded-full flex items-center justify-center text-voidBlack font-bold text-lg shadow-lg shadow-bauyesLime/50">
-                                                1
-                                            </div>
-                                        </div>
-                                        <div className="bg-bauyesLime/10 border-2 border-bauyesLime rounded-xl p-4 w-full text-center h-36 flex flex-col justify-center shadow-[0_0_20px_rgba(74,222,128,0.2)]">
-                                            <p className="text-base font-bold text-bauyesDark truncate mb-1">
-                                                {podium[0].full_name || podium[0].username || "User"}
-                                            </p>
-                                            <p className="text-bauyesLime font-bold text-2xl drop-shadow-[0_0_10px_rgba(74,222,128,0.5)]">
-                                                {podium[0].total_xp.toLocaleString()} XP
-                                            </p>
-                                            <p className="text-xs text-muted-foreground mt-1">Level {podium[0].current_level}</p>
-                                        </div>
-                                    </div>
-                                )}
+                {/* Leaderboard */}
+                <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden">
+                    {loading ? (
+                        <div className="p-12 text-center text-zinc-500">Loading leaderboard...</div>
+                    ) : leaderboard.length === 0 ? (
+                        <div className="p-12 text-center text-zinc-500">No entries found for this month.</div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead className="bg-zinc-950/50 border-b border-zinc-800">
+                                    <tr>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold text-zinc-400 uppercase tracking-wider w-20">
+                                            Rank
+                                        </th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                                            Agent
+                                        </th>
+                                        <th className="px-6 py-4 text-center text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                                            Level
+                                        </th>
+                                        <th className="px-6 py-4 text-right text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                                            Total XP
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-zinc-800/50">
+                                    {leaderboard.map((entry) => (
+                                        <tr
+                                            key={entry.id}
+                                            className={cn(
+                                                "transition-colors hover:bg-zinc-800/30",
+                                                entry.rank === 1 && "bg-gradient-to-r from-yellow-500/5 to-transparent",
+                                                entry.rank === 2 && "bg-gradient-to-r from-zinc-400/5 to-transparent",
+                                                entry.rank === 3 && "bg-gradient-to-r from-orange-600/5 to-transparent"
+                                            )}
+                                        >
+                                            {/* Rank */}
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center justify-center">
+                                                    {getMedalForRank(entry.rank)}
+                                                    {!getMedalForRank(entry.rank) && (
+                                                        <div className={cn(
+                                                            "w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm",
+                                                            entry.rank <= 10
+                                                                ? "bg-lime-500/10 text-lime-400 border border-lime-500/20"
+                                                                : "text-zinc-500"
+                                                        )}>
+                                                            #{entry.rank}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </td>
 
-                                {/* #3 - Bronze (Right) */}
-                                {podium[2] && (
-                                    <div className="flex flex-col items-center w-32 md:w-40">
-                                        <div className="relative mb-3">
-                                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-bauyesDark/10 flex items-center justify-center border-2 border-border overflow-hidden">
-                                                {podium[2].avatar_url ? (
-                                                    <Image src={podium[2].avatar_url} alt={podium[2].full_name || "User"} width={96} height={96} className="w-full h-full object-cover" />
-                                                ) : (
-                                                    <UserIcon size={32} className="text-bauyesDark" />
-                                                )}
-                                            </div>
-                                            <div className="absolute -top-2 -right-2 w-8 h-8 bg-bauyesDark/60 rounded-full flex items-center justify-center text-voidBlack font-bold text-sm shadow-lg">
-                                                3
-                                            </div>
-                                        </div>
-                                        <div className="bg-card border-2 border-border rounded-xl p-4 w-full text-center h-32 flex flex-col justify-center">
-                                            <p className="text-sm font-bold text-bauyesDark truncate mb-1">
-                                                {podium[2].full_name || podium[2].username || "User"}
-                                            </p>
-                                            <p className="text-bauyesLime font-bold text-lg">
-                                                {podium[2].total_xp.toLocaleString()} XP
-                                            </p>
-                                            <p className="text-xs text-muted-foreground mt-1">Level {podium[2].current_level}</p>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* List - Rank 4-50 */}
-                        {list.length > 0 && (
-                            <div className="bg-card border border-border rounded-2xl overflow-hidden">
-                                <div className="overflow-x-auto">
-                                    <table className="w-full">
-                                        <thead className="bg-card border-b border-border">
-                                            <tr>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                                                    Rank
-                                                </th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                                                    User
-                                                </th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                                                    Level
-                                                </th>
-                                                <th className="px-6 py-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                                                    Total XP
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-border">
-                                            {list.map((profile, index) => {
-                                                const rank = index + 4; // Starts at 4
-                                                const isCurrentUser = profile.id === user.id;
-
-                                                return (
-                                                    <tr
-                                                        key={profile.id}
-                                                        className={cn(
-                                                            "transition-colors",
-                                                            isCurrentUser
-                                                                ? "bg-bauyesLime/10 border-l-4 border-l-bauyesLime"
-                                                                : "hover:bg-white/5"
-                                                        )}
-                                                    >
-                                                        <td className="px-6 py-4 whitespace-nowrap">
-                                                            <div className="flex items-center">
-                                                                <span className={cn(
-                                                                    "text-lg font-bold",
-                                                                    isCurrentUser ? "text-bauyesLime" : "text-muted-foreground"
-                                                                )}>
-                                                                    #{rank}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
-                                                            <div className="flex items-center gap-3">
-                                                                <div className="w-10 h-10 rounded-full bg-bauyesDark/10 flex items-center justify-center border border-border overflow-hidden flex-shrink-0">
-                                                                    {profile.avatar_url ? (
-                                                                        <Image src={profile.avatar_url} alt={profile.full_name || "User"} width={40} height={40} className="w-full h-full object-cover" />
-                                                                    ) : (
-                                                                        <UserIcon size={20} className="text-bauyesDark" />
-                                                                    )}
-                                                                </div>
-                                                                <div className="min-w-0">
-                                                                    <p className={cn(
-                                                                        "text-sm font-bold truncate",
-                                                                        isCurrentUser ? "text-bauyesLime" : "text-bauyesDark"
-                                                                    )}>
-                                                                        {profile.full_name || profile.username || "User"}
-                                                                        {isCurrentUser && <span className="ml-2 text-xs">(You)</span>}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
-                                                            <span className="text-sm text-gray-300">
-                                                                {profile.current_level}
+                                            {/* Agent */}
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 overflow-hidden border-2 border-zinc-700">
+                                                        {entry.avatar_url ? (
+                                                            <Image
+                                                                src={entry.avatar_url}
+                                                                alt={entry.full_name || entry.username}
+                                                                width={48}
+                                                                height={48}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        ) : (
+                                                            <span className="text-xl font-bold text-zinc-500">
+                                                                {(entry.full_name || entry.username || "?")[0].toUpperCase()}
                                                             </span>
-                                                        </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap">
-                                                            <div className="flex items-center gap-1">
-                                                                <Trophy size={16} className="text-bauyesLime" />
-                                                                <span className={cn(
-                                                                    "text-sm font-bold",
-                                                                    isCurrentUser ? "text-bauyesLime" : "text-muted-foreground"
-                                                                )}>
-                                                                    {profile.total_xp.toLocaleString()}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        )}
-                    </>
-                )}
+                                                        )}
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-bold text-white text-lg">
+                                                            {entry.full_name || entry.username || "Unknown Agent"}
+                                                        </p>
+                                                        {entry.full_name && entry.username && (
+                                                            <p className="text-xs text-zinc-500">@{entry.username}</p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            {/* Level */}
+                                            <td className="px-6 py-4 text-center">
+                                                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-800/50 border border-zinc-700 rounded-lg">
+                                                    <Flame className="w-4 h-4 text-orange-500" />
+                                                    <span className="font-mono font-bold text-white">
+                                                        L{entry.current_level}
+                                                    </span>
+                                                </div>
+                                            </td>
+
+                                            {/* XP */}
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="flex flex-col items-end">
+                                                    <span className="text-2xl font-mono font-bold text-lime-400">
+                                                        {entry.total_xp.toLocaleString()}
+                                                    </span>
+                                                    <span className="text-xs text-zinc-500 uppercase tracking-wider">XP</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+
+                {/* Stats Footer */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 text-center">
+                        <p className="text-sm text-zinc-500 uppercase tracking-wider mb-2">Total Agents</p>
+                        <p className="text-3xl font-bold text-white">{leaderboard.length}</p>
+                    </div>
+                    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 text-center">
+                        <p className="text-sm text-zinc-500 uppercase tracking-wider mb-2">Top XP</p>
+                        <p className="text-3xl font-bold text-lime-400">
+                            {leaderboard[0]?.total_xp.toLocaleString() || 0}
+                        </p>
+                    </div>
+                    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 text-center">
+                        <p className="text-sm text-zinc-500 uppercase tracking-wider mb-2">Highest Level</p>
+                        <p className="text-3xl font-bold text-orange-500">
+                            L{leaderboard[0]?.current_level || 0}
+                        </p>
+                    </div>
+                </div>
             </div>
         </DashboardShell>
     );

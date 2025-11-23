@@ -10,8 +10,10 @@ export async function createTask(formData: FormData) {
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
     const xp_reward = parseInt(formData.get('xp_reward') as string);
-    const is_global = formData.get('is_global') === 'on';
     const event_id = formData.get('event_id') as string || null;
+
+    // If event_id exists, it's event-specific, otherwise it's global
+    const is_global = event_id ? false : true;
 
     const { data: userData, error: userError } = await supabase.auth.getUser();
 
@@ -45,6 +47,7 @@ export async function createTask(formData: FormData) {
     }
 
     revalidatePath('/dashboard/tasks');
+    revalidatePath('/admin/tasks');
     if (event_id) {
         revalidatePath(`/dashboard/events/${event_id}`);
     }

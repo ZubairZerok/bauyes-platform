@@ -27,8 +27,14 @@ export function SideNav({ profile }: SideNavProps) {
             {/* Desktop Sidebar - collapsed icons-only */}
             <aside className="hidden md:flex flex-col w-14 fixed inset-y-0 left-0 bg-zinc-950 border-r border-zinc-800 z-50">
                 <div className="p-2 flex items-center justify-center">
-                    <Link href="/" aria-label="Home" title="Home" className="p-2 rounded-full text-white/90 hover:bg-white/5">
-                        <Home size={20} />
+                    <Link href="/" aria-label="BAUYES" title="BAUYES" className="p-2 rounded-full hover:bg-white/5">
+                        <Image
+                            src="/bauyes-logo.png"
+                            alt="BAUYES Logo"
+                            width={24}
+                            height={24}
+                            className="w-6 h-6"
+                        />
                     </Link>
                 </div>
 
