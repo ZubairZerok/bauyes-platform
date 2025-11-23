@@ -24,6 +24,7 @@ export async function updateProfile(formData: FormData): Promise<UpdateProfileRe
         const fullName = formData.get("fullName") as string;
         const username = formData.get("username") as string;
         const bio = formData.get("bio") as string;
+        const avatarUrl = formData.get("avatarUrl") as string;
 
         // Validate inputs
         if (!fullName || fullName.trim().length === 0) {
@@ -64,6 +65,7 @@ export async function updateProfile(formData: FormData): Promise<UpdateProfileRe
                 full_name: fullName.trim(),
                 username: username.trim(),
                 bio: bio?.trim() || null,
+                avatar_url: avatarUrl?.trim() || null,
                 updated_at: new Date().toISOString(),
             })
             .eq("id", user.id);

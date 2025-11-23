@@ -124,6 +124,19 @@ export async function approveTask(userTaskId: string, xpReward: number, userId: 
         throw new Error('Unauthorized: Admin access required');
     }
 
+    // Get the task details to check if it's event-specific
+    const { data: userTask } = await supabase
+        .from('user_tasks')
+        .select('task_id')
+        .eq('id', userTaskId)
+        .single();
+
+    const { data: task } = await supabase
+        .from('tasks')
+        .select('event_id, is_global')
+        .eq('id', userTask?.task_id)
+        .single();
+
     // 1. Update task status
     const { error: taskError } = await supabase
         .from('user_tasks')
@@ -135,24 +148,44 @@ export async function approveTask(userTaskId: string, xpReward: number, userId: 
         throw new Error('Failed to approve task');
     }
 
-    // 2. Award XP
-    const { data: userProfile, error: profileError } = await supabase
-        .from('profiles')
-        .select('total_xp')
-        .eq('id', userId)
-        .single();
+    // 2. Award XP based on task type
+    if (task?.event_id) {
+        // Event-specific task: Update event_score only
+        const { data: registration } = await supabase
+            .from('registrations')
+            .select('event_score')
+            .eq('event_id', task.event_id)
+            .eq('user_id', userId)
+            .single();
 
-    if (profileError) {
-        console.error('Error fetching user profile:', profileError);
+        if (registration) {
+            const newEventScore = (registration.event_score || 0) + xpReward;
+            await supabase
+                .from('registrations')
+                .update({ event_score: newEventScore })
+                .eq('event_id', task.event_id)
+                .eq('user_id', userId);
+        }
     } else {
-        const newXp = (userProfile?.total_xp || 0) + xpReward;
-        const { error: xpError } = await supabase
+        // Global task: Update total_xp
+        const { data: userProfile, error: profileError } = await supabase
             .from('profiles')
-            .update({ total_xp: newXp })
-            .eq('id', userId);
+            .select('total_xp')
+            .eq('id', userId)
+            .single();
 
-        if (xpError) {
-            console.error('Error updating XP:', xpError);
+        if (profileError) {
+            console.error('Error fetching user profile:', profileError);
+        } else {
+            const newXp = (userProfile?.total_xp || 0) + xpReward;
+            const { error: xpError } = await supabase
+                .from('profiles')
+                .update({ total_xp: newXp })
+                .eq('id', userId);
+
+            if (xpError) {
+                console.error('Error updating XP:', xpError);
+            }
         }
     }
 

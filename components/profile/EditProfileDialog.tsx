@@ -16,6 +16,7 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
     const [fullName, setFullName] = useState(profile.full_name || "");
     const [username, setUsername] = useState(profile.username || "");
     const [bio, setBio] = useState(profile.bio || "");
+    const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || "");
 
     if (!isOpen) return null;
 
@@ -26,6 +27,7 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
         formData.append("fullName", fullName);
         formData.append("username", username);
         formData.append("bio", bio);
+        formData.append("avatarUrl", avatarUrl);
 
         startTransition(async () => {
             const result = await updateProfile(formData);
@@ -41,7 +43,7 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
 
     return (
         <div className="fixed inset-0 bg-bauyesDark/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-bauyesLime border border-bauyesDark rounded-2xl max-w-lg w-full p-6 relative">
+            <div className="bg-bauyesLime border border-bauyesDark rounded-2xl max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto">
                 {/* Close Button */}
                 <button
                     onClick={onClose}
@@ -57,6 +59,22 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Profile Picture URL */}
+                    <div>
+                        <label htmlFor="avatarUrl" className="block text-sm font-medium text-bauyesDark/80 mb-2">
+                            Profile Picture URL
+                        </label>
+                        <input
+                            id="avatarUrl"
+                            type="url"
+                            value={avatarUrl}
+                            onChange={(e) => setAvatarUrl(e.target.value)}
+                            className="w-full px-4 py-3 bg-white/50 border border-bauyesDark/20 rounded-lg text-bauyesDark placeholder-bauyesDark/50 focus:outline-none focus:border-bauyesDark transition-colors"
+                            placeholder="https://example.com/your-photo.jpg"
+                        />
+                        <p className="text-xs text-bauyesDark/60 mt-1">Paste a URL to your profile picture</p>
+                    </div>
+
                     {/* Full Name */}
                     <div>
                         <label htmlFor="fullName" className="block text-sm font-medium text-bauyesDark/80 mb-2">

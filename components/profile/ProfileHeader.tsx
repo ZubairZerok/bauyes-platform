@@ -52,24 +52,24 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
             <div className="pt-20 md:pt-24 px-8 pb-6">
                 <div className="max-w-2xl">
                     {/* Name */}
-                    <h1 className="text-3xl md:text-4xl font-display font-bold text-bauyesLime mb-2">
+                    <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-2">
                         {profile.full_name || "Anonymous User"}
                     </h1>
 
                     {/* Username */}
                     {profile.username && (
-                        <p className="text-lg text-bauyesDark mb-4">
+                        <p className="text-lg text-zinc-400 mb-4">
                             @{profile.username}
                         </p>
                     )}
 
                     {/* Bio */}
                     {profile.bio ? (
-                        <p className="text-bauyesDark text-base leading-relaxed">
+                        <p className="text-zinc-300 text-base leading-relaxed">
                             {profile.bio}
                         </p>
                     ) : (
-                        <p className="text-muted-foreground italic text-sm">
+                        <p className="text-zinc-500 italic text-sm">
                             No bio yet. Click &quot;Edit Profile&quot; to add one!
                         </p>
                     )}
