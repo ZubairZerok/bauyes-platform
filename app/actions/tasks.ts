@@ -43,7 +43,8 @@ export async function createTask(formData: FormData) {
 
     if (error) {
         console.error('Error creating task:', error);
-        throw new Error('Failed to create task');
+        console.error('Error details:', JSON.stringify(error, null, 2));
+        throw new Error(`Failed to create task: ${error.message || 'Unknown error'}`);
     }
 
     revalidatePath('/dashboard/tasks');

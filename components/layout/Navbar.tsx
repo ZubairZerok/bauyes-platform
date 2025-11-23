@@ -59,8 +59,8 @@ export function Navbar({ user }: NavbarProps) {
                         <div className="flex items-center justify-between gap-8">
                             {/* Logo */}
                             <Link href="/" className="flex items-center gap-2 font-display font-bold text-xl group">
-                                <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
-                                    <Sprout className="text-white" size={24} />
+                                <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }} className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-white">
+                                    <img src="/bauyes-logo.png" alt="BAUYES" className="w-full h-full object-cover" />
                                 </motion.div>
                                 <span className="text-white group-hover:text-[#bef264] transition-colors">
                                     BAUYES
@@ -169,7 +169,9 @@ export function Navbar({ user }: NavbarProps) {
             >
                 <div className="flex items-center justify-between px-4 py-3">
                     <Link href="/" className="flex items-center gap-2 text-foreground font-display font-bold text-lg">
-                        <Sprout className="text-primary" size={20} />
+                        <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center bg-white">
+                            <img src="/bauyes-logo.png" alt="BAUYES" className="w-full h-full object-cover" />
+                        </div>
                         BAUYES
                     </Link>
                     <div className="flex items-center gap-2">
