@@ -17,6 +17,7 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
     const [username, setUsername] = useState(profile.username || "");
     const [bio, setBio] = useState(profile.bio || "");
     const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || "");
+    const [coverPhotoUrl, setCoverPhotoUrl] = useState("");
     const [facebook, setFacebook] = useState("");
     const [linkedin, setLinkedin] = useState("");
 
@@ -30,6 +31,7 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
         formData.append("username", username);
         formData.append("bio", bio);
         formData.append("avatarUrl", avatarUrl);
+        formData.append("coverPhotoUrl", coverPhotoUrl);
         formData.append("facebook", facebook);
         formData.append("linkedin", linkedin);
 
@@ -77,6 +79,22 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
                             placeholder="https://example.com/your-photo.jpg"
                         />
                         <p className="text-xs text-bauyesDark/60 mt-1">Paste a URL to your profile picture</p>
+                    </div>
+
+                    {/* Cover Photo URL */}
+                    <div>
+                        <label htmlFor="coverPhotoUrl" className="block text-sm font-medium text-bauyesDark/80 mb-2">
+                            Cover Photo URL
+                        </label>
+                        <input
+                            id="coverPhotoUrl"
+                            type="url"
+                            value={coverPhotoUrl}
+                            onChange={(e) => setCoverPhotoUrl(e.target.value)}
+                            className="w-full px-4 py-3 bg-white/50 border border-bauyesDark/20 rounded-lg text-bauyesDark placeholder-bauyesDark/50 focus:outline-none focus:border-bauyesDark transition-colors"
+                            placeholder="https://example.com/cover-photo.jpg"
+                        />
+                        <p className="text-xs text-bauyesDark/60 mt-1">Paste a URL to your cover photo (banner)</p>
                     </div>
 
                     {/* Full Name */}

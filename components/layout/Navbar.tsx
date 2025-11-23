@@ -120,12 +120,6 @@ export function Navbar({ user }: NavbarProps) {
                                                         <UserIcon size={18} className="group-hover:text-[#bef264] transition-colors" />
                                                     </div>
                                                 </div>
-                                                <motion.span
-                                                    style={{ fontWeight: navFontWeight }}
-                                                    className="text-xs bg-[#bef264]/10 px-2.5 py-1 rounded-full border border-border text-white"
-                                                >
-                                                    XP: 0
-                                                </motion.span>
                                             </motion.button>
                                             <AnimatePresence>
                                                 {isProfileOpen && (
