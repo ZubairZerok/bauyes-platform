@@ -1,5 +1,6 @@
 import { GridBackground } from "@/components/ui/GridBackground";
 import { Hero } from "@/components/home/Hero";
+import { FacebookFeed } from "@/components/home/FacebookFeed";
 import { CoreValues } from "@/components/home/CoreValues";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       <GridBackground />
       <main className="relative z-10">
         <Hero />
+        <FacebookFeed />
         <CoreValues />
       </main>
     </div>

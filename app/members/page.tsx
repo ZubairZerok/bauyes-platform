@@ -17,6 +17,7 @@ export default async function MembersPage() {
         bio_short: `${profile.total_xp} XP`,
         bio_long: profile.bio || "No bio available",
         profile_image: profile.avatar_url || null,
+        image_url: profile.avatar_url || null,
         social_links: {},
         achievements: [],
         status: "active" as const,

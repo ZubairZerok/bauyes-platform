@@ -39,6 +39,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${cinzel.variable} antialiased bg-[#022c22] text-white min-h-screen flex flex-col`}>
+        {/* Facebook SDK */}
+        <div id="fb-root"></div>
+        <script async defer crossOrigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0" nonce="YOUR_NONCE"></script>
+
         <Navbar user={user} />
         <StickySocials />
         <main className="flex-grow pt-16">
