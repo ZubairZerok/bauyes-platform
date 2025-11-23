@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Calendar, Target, Users, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Calendar, Target, Users, Settings, LogOut, ClipboardCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
     { name: "Overview", href: "/admin", icon: LayoutDashboard },
     { name: "Events", href: "/admin/events", icon: Calendar },
     { name: "Missions", href: "/admin/tasks", icon: Target },
+    { name: "Reviews", href: "/admin/tasks/reviews", icon: ClipboardCheck },
     { name: "Users", href: "/admin/users", icon: Users },
 ];
 
