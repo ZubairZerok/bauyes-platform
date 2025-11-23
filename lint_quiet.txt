@@ -1,0 +1,43 @@
+
+> temp-bauyes@0.1.0 lint
+> eslint --quiet
+
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\resources\page.tsx
+  51:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\resources\page.tsx:51:9
+  49 |
+  50 |     useEffect(() => {
+> 51 |         fetchResources();
+     |         ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  52 |     }, [fetchResources]);
+  53 |
+  54 |     const updateSearchParams = (key: string, value: string | null) => {  react-hooks/set-state-in-effect
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\ui\ThemeToggle.tsx
+  16:17  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\ui\ThemeToggle.tsx:16:17
+  14 |         if (savedTheme) {
+  15 |             if (savedTheme === "light") {
+> 16 |                 setTheme("light");
+     |                 ^^^^^^^^ Avoid calling setState() directly within an effect
+  17 |             }
+  18 |             document.documentElement.classList.toggle("dark", savedTheme === "dark");
+  19 |         } else {  react-hooks/set-state-in-effect
+
+✖ 2 problems (2 errors, 0 warnings)
+

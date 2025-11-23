@@ -1,0 +1,145 @@
+﻿
+> temp-bauyes@0.1.0 lint
+> eslint
+
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\admin\events\[id]\page.tsx
+  162:54  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  170:61  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\admin\page.tsx
+    2:10  warning  'LayoutDashboard' is defined but never used                                                                                                                         @typescript-eslint/no-unused-vars
+  107:21  error    Do not use an `<a>` element to navigate to `/admin/events/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\admin\users\page.tsx
+   2:10  warning  'Profile' is defined but never used                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  89:57  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\dashboard\events\[id]\page.tsx
+  3:10  warning  'SubmissionDialog' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\dashboard\leaderboard\page.tsx
+    5:17  warning  'Medal' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   26:11  warning  'currentUserProfile' is assigned a value but never used                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   61:53  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+   89:53  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  116:53  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  189:73  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\faq\page.tsx
+   71:68   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+   71:73   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+   71:92   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+   71:101  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+   84:52   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  118:55   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  119:44   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  119:65   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\privacy\page.tsx
+  54:48   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  57:47   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  58:47   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  59:47   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  60:47   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  68:162  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\resources\page.tsx
+  24:9  error    Error: Cannot access variable before it is declared
+
+`fetchResources` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\resources\page.tsx:24:9
+  22 |
+  23 |     useEffect(() => {
+> 24 |         fetchResources();
+     |         ^^^^^^^^^^^^^^ `fetchResources` accessed before it is declared
+  25 |     }, [category, query]);
+  26 |
+  27 |     const fetchResources = async () => {
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\resources\page.tsx:27:5
+  25 |     }, [category, query]);
+  26 |
+> 27 |     const fetchResources = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |         setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 51 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 52 |     };
+     | ^^^^^^^ `fetchResources` is declared here
+  53 |
+  54 |     const updateSearchParams = (key: string, value: string | null) => {
+  55 |         const params = new URLSearchParams(searchParams.toString());  react-hooks/immutability
+  25:8  warning  React Hook useEffect has a missing dependency: 'fetchResources'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/exhaustive-deps
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\app\terms\page.tsx
+  31:48   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  52:110  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  67:48   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  67:68   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  68:49   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\auth\AuthForm.tsx
+  44:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\contact\ContactForm.tsx
+  100:48  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\events\EventCard.tsx
+  29:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\home\CoreValues.tsx
+  40:111  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\home\Hero.tsx
+  3:18  warning  'AnimatePresence' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\layout\SideNav.tsx
+  59:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\layout\StickySocials.tsx
+   4:20  warning  'Github' is defined but never used        @typescript-eslint/no-unused-vars
+  27:58  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\members\MemberModal.tsx
+  104:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\profile\BadgeGrid.tsx
+  31:63  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\profile\ProfileHeader.tsx
+  27:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  70:47  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  70:60  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\ui\ThemeToggle.tsx
+  15:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\components\ui\ThemeToggle.tsx:15:13
+  13 |
+  14 |         if (savedTheme) {
+> 15 |             setTheme(savedTheme);
+     |             ^^^^^^^^ Avoid calling setState() directly within an effect
+  16 |             document.documentElement.classList.toggle("dark", savedTheme === "dark");
+  17 |         } else {
+  18 |             // Default to dark if no preference  react-hooks/set-state-in-effect
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\lib\actions\admin.ts
+  77:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\zubai\OneDrive\Desktop\bauyes proto\utils\supabase\middleware.ts
+  18:58  warning  'options' is defined but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 50 problems (32 errors, 18 warnings)
+
