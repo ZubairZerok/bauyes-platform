@@ -17,6 +17,8 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
     const [username, setUsername] = useState(profile.username || "");
     const [bio, setBio] = useState(profile.bio || "");
     const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || "");
+    const [facebook, setFacebook] = useState("");
+    const [linkedin, setLinkedin] = useState("");
 
     if (!isOpen) return null;
 
@@ -28,6 +30,8 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
         formData.append("username", username);
         formData.append("bio", bio);
         formData.append("avatarUrl", avatarUrl);
+        formData.append("facebook", facebook);
+        formData.append("linkedin", linkedin);
 
         startTransition(async () => {
             const result = await updateProfile(formData);
@@ -109,6 +113,39 @@ export function EditProfileDialog({ profile, isOpen, onClose }: EditProfileDialo
                             />
                         </div>
                         <p className="text-xs text-bauyesDark/60 mt-1">Lowercase letters, numbers, and underscores only</p>
+                    </div>
+
+                    {/* Social Links */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Facebook */}
+                        <div>
+                            <label htmlFor="facebook" className="block text-sm font-medium text-bauyesDark/80 mb-2">
+                                Facebook URL
+                            </label>
+                            <input
+                                id="facebook"
+                                type="url"
+                                value={facebook}
+                                onChange={(e) => setFacebook(e.target.value)}
+                                className="w-full px-4 py-3 bg-white/50 border border-bauyesDark/20 rounded-lg text-bauyesDark placeholder-bauyesDark/50 focus:outline-none focus:border-bauyesDark transition-colors"
+                                placeholder="https://facebook.com/..."
+                            />
+                        </div>
+
+                        {/* LinkedIn */}
+                        <div>
+                            <label htmlFor="linkedin" className="block text-sm font-medium text-bauyesDark/80 mb-2">
+                                LinkedIn URL
+                            </label>
+                            <input
+                                id="linkedin"
+                                type="url"
+                                value={linkedin}
+                                onChange={(e) => setLinkedin(e.target.value)}
+                                className="w-full px-4 py-3 bg-white/50 border border-bauyesDark/20 rounded-lg text-bauyesDark placeholder-bauyesDark/50 focus:outline-none focus:border-bauyesDark transition-colors"
+                                placeholder="https://linkedin.com/in/..."
+                            />
+                        </div>
                     </div>
 
                     {/* Bio */}
